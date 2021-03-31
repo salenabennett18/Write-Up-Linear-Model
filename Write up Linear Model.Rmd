@@ -2,7 +2,10 @@
 title: "Write up Linear Model"
 author: "Salena Bennett"
 date: "3/23/2021"
-output: html_document
+output: 
+    html_document:
+        toc: true
+
 ---
 
 ```{r setup, include=FALSE}
@@ -28,22 +31,25 @@ require(knitr)
 data <- read.csv(file="https://onlinestatbook.com/case_studies_rvls/physical_strength/data.txt",sep="",header=TRUE)  
 ```
 
+# model1
 ```{r}
 basicNN <- ggplot(data,aes(y=SIMS,x=ARM))
 ```
-##Now add in scatterplot
+### Now add in scatterplot
 
 ```{r}
 basicNN + geom_point()
 ```
+ 
+Scatter plot shows positive relation between ARM and SIM. Equation of the line is SIMS = -4.1+0.05*ARM.The adjusted R square is 0.467. The residual standard error is 1.226, the residual standard error is it the standard deviation of the normal spread of errors any point on the line.
   
 
-# Numerical results
+### Numerical results
 
 ```{r}
 cor(SIMS~ARM,data=data)
 ```
-# Inferential  (Build linear model)
+### Inferential  (Build linear model)
   
 ```{r}
 model.1 <- lm(SIMS~ARM,data=data)
@@ -56,31 +62,35 @@ predict(model.1,newdata,interval="prediction")
 ```
 
 
-# now add the model fit to our plot
+### now add the model fit to our plot
   
 ```{r}
 basicNN + geom_point() + geom_smooth(method=lm)
 ``` 
   
 The equation for SIMS explained by ARM is  
-SIMS=-4.1+.0545*GRIP  
+SIMS=-4.1+.0545*ARM
+The scatter plot shows positive relation between SIMS and ARM. The equation 
 
+# model2
 ```{r}
 basicGG <- ggplot(data,aes(y=SIMS,x=GRIP))
 ```
-##Now add in scatterplot
+### Now add in scatterplot
 
 ```{r}
-basicGG + geom_point()
+basicGG + geom_point()+geom_smooth(method=lm)
 ```
+
+The scatter plot shows that there is a positive relation between GRIP and SIM. Equation of the line is SIMS = -4.9 + 0.04 * GRIP. The adjusted R square is 0.405. The residual standard error is 1.295, the residual standard error is the standard deviation of the normal spread of errors any error point on the line.  
   
 
-# Numerical results
+### Numerical results
 
 ```{r}
 cor(SIMS~GRIP,data=data)
 ```
-# Inferential  (Build linear model)
+### Inferential  (Build linear model)
   
 ```{r}
 model.2 <- lm(SIMS~GRIP,data=data)
@@ -89,7 +99,7 @@ predict(model.2,newdata,interval="prediction")
 ```
 
 
-# now add the model fit to our plot
+### now add the model fit to our plot
   
 
 
@@ -98,16 +108,25 @@ predict(model.2,newdata,interval="prediction")
   
 
 
-# Inferential  (Build linear model)
+### Inferential  (Build linear model)
   
+# model3
+
+
+
+
 ```{r}
 model.3 <- lm(SIMS~ARM+GRIP,data=data)
 summary.lm(model.3)
 predict(model.3,newdata,interval="prediction")
 ```
 SIMS=-5.43+0.037 * ARM + 0.024 * GRIP 
+  
+# Compare the models  
 
 ```{r}
 anova(model.1,model.3)
+predict(model.3, newdata, interval = "prediction")
 ```
-The p-vaule 
+
+The anova compares model 1 with model 3. The null hypothesis is no difference in the ability to predict SIMS. The alternative hypothesis is that there is a difference. The p-value is 0.000005 this is so small the the difference the ability to predict SIMS is not due to chance. The adjusted r square and standard deviation of the errors both indicate the ARM+GRIP model is better. The prediction for ARM+GRIP model is a 0.15 and the 95% confidence interval is -2.1 to 2.4.
